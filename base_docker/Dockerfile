@@ -2,8 +2,9 @@ FROM nvidia/cuda:9.1-cudnn7-devel
 
 # apt-get
 RUN apt-get update
-RUN apt-get install wget git unzip build-essential cmake git libgtk2.0-dev pkg-config libavcodec-dev libavformat-dev libswscale-dev -y
+RUN apt-get install wget git unzip build-essential cmake git libgtk2.0-dev pkg-config libavcodec-dev libavformat-dev libswscale-dev python3-pip -y
 RUN apt-get clean
+RUN pip3 install numpy
 
 # build darknet
 WORKDIR /tmp
@@ -16,3 +17,4 @@ RUN sed -ie "s/AVX=0/AVX=1/g" Makefile
 RUN sed -ie "s/OPENMP=0/OPENMP=1/g" Makefile
 RUN make
 RUN cp darknet ~/
+WORKDIR /root

@@ -32,9 +32,9 @@ def convert(size, box):
         h += 1e-6
     return (x,y,w,h)
 
-def convert_annotation(year, image_id):
-    in_file = open('VOCdevkit/VOC%s/Annotations/%s.xml'%(year, image_id))
-    out_file = open('VOCdevkit/VOC%s/labels/%s.txt'%(year, image_id), 'w')
+def convert_annotation(image_id):
+    in_file = open('Annotations/%s.xml'%(image_id))
+    out_file = open('labels/%s.txt'%(image_id), 'w')
     tree=ET.parse(in_file)
     root = tree.getroot()
     size = root.find('size')
@@ -62,46 +62,42 @@ def convert_annotation(year, image_id):
 
 wd = getcwd()
 
-if not os.path.exists('VOCdevkit/VOC2018/ImageSets/Main'):
-    os.makedirs('VOCdevkit/VOC2018/ImageSets/Main')
-if not os.path.exists('VOCdevkit/VOC2018/JPEGImages'):
-    os.makedirs('VOCdevkit/VOC2018/JPEGImages')
-if not os.path.exists('VOCdevkit/VOC2018/labels'):
-    os.makedirs('VOCdevkit/VOC2018/labels')
-if not os.path.exists('VOCdevkit/VOC2018/Annotations'):
-    os.makedirs('VOCdevkit/VOC2018/Annotations')
+if not os.path.exists('ImageSets/Main'):
+    os.makedirs('ImageSets/Main')
+if not os.path.exists('JPEGImages'):
+    os.makedirs('JPEGImages')
+if not os.path.exists('labels'):
+    os.makedirs('labels')
+if not os.path.exists('Annotations'):
+    os.makedirs('Annotations')
 
 image_ids = np.array([file[:-4] for file in os.listdir('export/') if file.endswith('.xml')])
 order_image = np.random.permutation(len(image_ids))
 train_index = image_ids[:int(len(image_ids) * train_ratio)]
 val_index = image_ids[int(len(image_ids) * train_ratio):]
 sets=[
-        {'year': '2018', 'image_set': 'train', 'ids': train_index},
-        {'year': '2018', 'image_set': 'val', 'ids': val_index}
+        {'image_set': 'train', 'ids': train_index},
+        {'image_set': 'val', 'ids': val_index}
     ]
 
-with open('VOCdevkit/VOC%s/ImageSets/Main/%s.txt'%('2018', 'train'), 'w') as train_ids_file:
+with open('ImageSets/Main/%s.txt'%('train'), 'w') as train_ids_file:
     for image_id in train_index:
         train_ids_file.write('%s\n'%(image_id))
-        copyfile('export/%s.jpeg'%(image_id), 'VOCdevkit/VOC2018/JPEGImages/%s.jpeg'%(image_id))
-        copyfile('export/%s.jpeg'%(image_id), 'VOCdevkit/VOC2018/labels/%s.jpeg'%(image_id))
-        copyfile('export/%s.xml'%(image_id), 'VOCdevkit/VOC2018/Annotations/%s.xml'%(image_id))
-with open('VOCdevkit/VOC%s/ImageSets/Main/%s.txt'%('2018', 'val'), 'w') as val_ids_file:
+        copyfile('export/%s.jpeg'%(image_id), 'JPEGImages/%s.jpeg'%(image_id))
+        copyfile('export/%s.jpeg'%(image_id), 'labels/%s.jpeg'%(image_id))
+        copyfile('export/%s.xml'%(image_id), 'Annotations/%s.xml'%(image_id))
+with open('ImageSets/Main/%s.txt'%('val'), 'w') as val_ids_file:
     for image_id in val_index:
         val_ids_file.write('%s\n'%(image_id))
-        copyfile('export/%s.jpeg'%(image_id), 'VOCdevkit/VOC2018/JPEGImages/%s.jpeg'%(image_id))
-        copyfile('export/%s.jpeg'%(image_id), 'VOCdevkit/VOC2018/labels/%s.jpeg'%(image_id))
-        copyfile('export/%s.xml'%(image_id), 'VOCdevkit/VOC2018/Annotations/%s.xml'%(image_id))
+        copyfile('export/%s.jpeg'%(image_id), 'JPEGImages/%s.jpeg'%(image_id))
+        copyfile('export/%s.jpeg'%(image_id), 'labels/%s.jpeg'%(image_id))
+        copyfile('export/%s.xml'%(image_id), 'Annotations/%s.xml'%(image_id))
 
 for set in sets:
-    year = set['year']
     image_set = set['image_set']
     image_ids = set['ids']
-    if not os.path.exists('VOCdevkit/VOC%s/labels/'%(year)):
-        os.makedirs('VOCdevkit/VOC%s/labels/'%(year))
-    # image_ids = open('VOCdevkit/VOC%s/ImageSets/Main/%s.txt'%(year, image_set)).read().strip().split()
-    list_file = open('%s_%s.txt'%(year, image_set), 'w')
+    list_file = open('%s.txt'%(image_set), 'w')
     for image_id in image_ids:
-        list_file.write('%s/VOCdevkit/VOC%s/JPEGImages/%s.jpeg\n'%(wd, year, image_id))
-        convert_annotation(year, image_id)
+        list_file.write('%s/JPEGImages/%s.jpeg\n'%(wd, image_id))
+        convert_annotation(image_id)
     list_file.close()

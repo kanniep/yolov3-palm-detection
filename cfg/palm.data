@@ -1,5 +1,5 @@
 classes = 1
-train  = data/PalmTrainval_10-Oct-2018/2018_train.txt
-valid  = data/PalmTrainval_10-Oct-2018/2018_val.txt
+train  = data/train.txt
+valid  = data/val.txt
 names = data/palm.names
 backup = backup
