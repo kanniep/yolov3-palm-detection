@@ -1,6 +1,6 @@
 #!/bin/bash
 link=$1
 tarfile='export_data.tar.gz'
-wget $link > $tarfile
+wget -O $tarfile $link
 tar zxvf $tarfile 'export'
-python3 palm_lable.py
+python3 palm_label.py
