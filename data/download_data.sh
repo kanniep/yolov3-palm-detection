@@ -4,3 +4,5 @@ tarfile='export_data.tar.gz'
 wget -O $tarfile $link
 tar zxvf $tarfile 'export'
 python3 palm_label.py
+cd ..
+wget https://pjreddie.com/media/files/darknet53.conv.74
