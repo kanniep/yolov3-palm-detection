@@ -52,7 +52,7 @@ def convert_annotation(image_id):
             b = (float(xmlbox.find('xmin').text), float(xmlbox.find('xmax').text), float(xmlbox.find('ymin').text), float(xmlbox.find('ymax').text))
             bb = convert((w,h), b)
             print(bb)
-            out_file.write(str(cls_id) + " " + " ".join([str(a) for a in bb]) + '\n')
+            out_file.write(str(cls_id) + " " + " ".join(["{0:.6f}".format(round(a,6)) for a in bb]) + '\n')
 
 wd = getcwd()
 
